@@ -67,16 +67,22 @@ class Alumni(models.Model):
         return self.name
 
 class Questionnaire(models.Model):
+    Q_CHOICES= [
+        ('True', 'Yes'),
+        ('False', 'No'),
+        
+    ]
+
     alumni = models.ForeignKey(Alumni, on_delete=models.CASCADE)
-    alumni_meet = models.BooleanField(verbose_name = "Would you like to come for Alumni Meet, if the Institute organizes the same")
-    guest_college_event = models.BooleanField(verbose_name = "Do you have a wish to present yourself as a guest of our college events")
-    resource_person = models.BooleanField(verbose_name = "Willing to accept our invitation to you to act as a resource person")
-    mentor_research_papers = models.BooleanField(verbose_name = "Willful to be a mentor for any research projects to our students")
-    college_event_management =models.BooleanField(verbose_name = "Do you like to get involved in our college events management")
-    college_outreach_program = models.BooleanField(verbose_name = "Will you be intentional to participate in any of our college social out-reach programs")
-    college_promotional_endeavor = models.BooleanField(verbose_name = "Do you have an unforced desirous to contribute your valuable experience and timings for any of the college promotion endeavors")
-    job_refer = models.BooleanField(verbose_name = "Are you willing to refer any jobs to your college junior")
-    placement_cell= models.BooleanField(verbose_name = "Do you like to contribute to KCP placement cell")
+    alumni_meet = models.BooleanField(verbose_name = "Would you like to come for Alumni Meet, if the Institute organizes the same", choices=Q_CHOICES, default=False)
+    guest_college_event = models.BooleanField(verbose_name = "Do you have a wish to present yourself as a guest of our college events",choices=Q_CHOICES, default=False)
+    resource_person = models.BooleanField(verbose_name = "Willing to accept our invitation to you to act as a resource person", choices=Q_CHOICES, default=False)
+    mentor_research_papers = models.BooleanField(verbose_name = "Willful to be a mentor for any research projects to our students", choices=Q_CHOICES, default=False)
+    college_event_management =models.BooleanField(verbose_name = "Do you like to get involved in our college events management", choices=Q_CHOICES, default=False)
+    college_outreach_program = models.BooleanField(verbose_name = "Will you be intentional to participate in any of our college social out-reach programs", choices=Q_CHOICES, default=False)
+    college_promotional_endeavor = models.BooleanField(verbose_name = "Do you have an unforced desirous to contribute your valuable experience and timings for any of the college promotion endeavors", choices=Q_CHOICES, default=False)
+    job_refer = models.BooleanField(verbose_name = "Are you willing to refer any jobs to your college junior", choices=Q_CHOICES, default=False)
+    placement_cell= models.BooleanField(verbose_name = "Do you like to contribute to KCP placement cell", choices=Q_CHOICES, default=False)
 
     def __str__(self):
         return self.alumni.name
