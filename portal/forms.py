@@ -6,6 +6,7 @@ class AlumniForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=Alumni.GENDER_CHOICES, widget=forms.RadioSelect)
     educational_qualification = forms.ChoiceField(choices=Alumni.EDUCATIONAL_QUALIFICATION_CHOICES, widget=forms.RadioSelect)
     course_of_study = forms.ChoiceField(choices=Alumni.COURSE_OF_STUDY_CHOICES, widget=forms.RadioSelect)
+    employment_status = forms.ChoiceField(choices=Alumni.EMPLOYMENT_STATUS_CHOICES, widget=forms.RadioSelect)
     class Meta:
         model = Alumni
         fields = [
@@ -16,10 +17,6 @@ class AlumniForm(forms.ModelForm):
             'company_location', 'company_address', 'higher_study_details'
         ]
         widgets = {
-            # 'gender': forms.RadioSelect(),
-            # 'educational_qualification': forms.RadioSelect(),
-            # 'course_of_study': forms.RadioSelect(),
-            # 'employment_status': forms.RadioSelect(),
             'date_of_birth': forms.DateInput(attrs={'type': 'date'})
         }
     def __init__(self, *args, **kwargs):
@@ -34,6 +31,7 @@ class AlumniForm(forms.ModelForm):
             self.fields['educational_qualification_other'].widget.attrs['style'] = 'display:block;'
         else:
             self.fields['educational_qualification_other'].widget.attrs['style'] = 'display:none;'
+        self.fields['employment_status'].initial = 'Emp'
 
 class QuestionnaireForm(forms.ModelForm):
     class Meta:
