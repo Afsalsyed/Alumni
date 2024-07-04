@@ -9,7 +9,10 @@ def alumni_form_view(request):
         questionnaire_form = QuestionnaireForm(request.POST, prefix='questionnaire')
 
         if alumni_form.is_valid() and questionnaire_form.is_valid():
-            alumni = alumni_form.save()
+            alumni = alumni_form.save(commit=False)
+            if alumni_form.cleaned_data['educational_qualification'] == 'O':
+                alumni.educational_qualification = alumni_form.cleaned_data['educational_qualification_other']
+            alumni.save()
             questionnaire = questionnaire_form.save(commit=False)
             questionnaire.alumni = alumni
             questionnaire.save()

@@ -2,7 +2,7 @@ from django import forms # type: ignore
 from .models import Alumni, Questionnaire, YearOfStudy
 
 class AlumniForm(forms.ModelForm):
-    educational_qualification_other = forms.CharField(required=False, label="Other Educational Qualification")
+    educational_qualification_other = forms.CharField(required=False, label="Other Educational Qualification", widget=forms.TextInput(attrs={'style': 'display:none;'}))
     gender = forms.ChoiceField(choices=Alumni.GENDER_CHOICES, widget=forms.RadioSelect)
     educational_qualification = forms.ChoiceField(choices=Alumni.EDUCATIONAL_QUALIFICATION_CHOICES, widget=forms.RadioSelect)
     course_of_study = forms.ChoiceField(choices=Alumni.COURSE_OF_STUDY_CHOICES, widget=forms.RadioSelect)
@@ -29,9 +29,14 @@ class AlumniForm(forms.ModelForm):
         self.fields['pg_year_of_study'].queryset = YearOfStudy.objects.filter(degree__startswith='PG')
         if self.data.get('alumni-educational_qualification') == 'O':
             self.fields['educational_qualification_other'].widget.attrs['style'] = 'display:block;'
-        else:
-            self.fields['educational_qualification_other'].widget.attrs['style'] = 'display:none;'
-        self.fields['employment_status'].initial = 'Emp'
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        educational_qualification = cleaned_data.get('educational_qualification')
+        educational_qualification_other = cleaned_data.get('educational_qualification_other')
+        if educational_qualification == 'O' and not educational_qualification_other:
+            self.add_error('educational_qualification_other', 'This field is required.')
+        return cleaned_data
 
 class QuestionnaireForm(forms.ModelForm):
     class Meta:
