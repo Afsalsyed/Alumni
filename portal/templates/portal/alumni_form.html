@@ -1,4 +1,3 @@
-<!-- portal/templates/portal/alumni_form.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,18 +30,18 @@
         }
 
         function setupEventListeners() {
-            document.querySelectorAll('input[name="educational_qualification"]').forEach(input => {
+            document.querySelectorAll('input[name="alumni-educational_qualification"]').forEach(input => {
                 input.addEventListener('change', function() {
-                    const otherField = document.getElementById('other-qualification-field');
+                    const otherField = document.getElementById('id_alumni-educational_qualification_other');
                     if (this.value === 'O') {
-                        otherField.classList.remove('hidden');
+                        otherField.style.display = 'block';
                     } else {
-                        otherField.classList.add('hidden');
+                        otherField.style.display = 'none';
                     }
                 });
             });
 
-            document.querySelectorAll('input[name="course_of_study"]').forEach(input => {
+            document.querySelectorAll('input[name="alumni-course_of_study"]').forEach(input => {
                 input.addEventListener('change', function() {
                     filterYearOfStudyOptions(this.value);
                 });
@@ -50,8 +49,8 @@
         }
 
         function filterYearOfStudyOptions(course) {
-            const ugOptions = document.querySelectorAll('#id_ug_year_of_study option');
-            const pgOptions = document.querySelectorAll('#id_pg_year_of_study option');
+            const ugOptions = document.querySelectorAll('#id_alumni-ug_year_of_study option');
+            const pgOptions = document.querySelectorAll('#id_alumni-pg_year_of_study option');
 
             ugOptions.forEach(option => {
                 option.style.display = course === 'UG' ? 'block' : 'none';
@@ -135,20 +134,14 @@
             <div class="form-group">
                 {{ alumni_form.educational_qualification.label_tag }}
                 {% for radio in alumni_form.educational_qualification %}
-                    {% if not radio.choice_label == "--------" %}
-                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
-                    {% endif %}
+                    <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                 {% endfor %}
-            </div>
-            <div class="form-group hidden" id="other-qualification-field">
-                {{ alumni_form.educational_qualification_other.label_tag }} {{ alumni_form.educational_qualification_other }}
+                {{ alumni_form.educational_qualification_other }}
             </div>
             <div class="form-group">
                 {{ alumni_form.course_of_study.label_tag }}
                 {% for radio in alumni_form.course_of_study %}
-                    {% if not radio.choice_label == "--------" %}
-                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
-                    {% endif %}
+                    <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                 {% endfor %}
             </div>
             <div class="form-group">
@@ -157,20 +150,15 @@
             <div class="form-group">
                 {{ alumni_form.pg_year_of_study.label_tag }} {{ alumni_form.pg_year_of_study }}
             </div>
+            <button type="button" onclick="showTab(1)">Next</button>
+        </div>
+        <div class="tab" id="photo-employment">
+            <h2>Photo & Employment</h2>
             <div class="form-group">
                 {{ alumni_form.photo.label_tag }} {{ alumni_form.photo }}
             </div>
-            <button type="button" onclick="showTab(1)">Next</button>
-        </div>
-        <div class="tab" id="employment-higher-education">
-            <h2>Employment & Higher Education</h2>
             <div class="form-group">
-                {{ alumni_form.employment_status.label_tag }}
-                {% for radio in alumni_form.employment_status %}
-                    {% if not radio.choice_label == "--------" %}
-                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
-                    {% endif %}
-                {% endfor %}
+                {{ alumni_form.employment_status.label_tag }} {{ alumni_form.employment_status }}
             </div>
             <div class="form-group">
                 {{ alumni_form.company_name.label_tag }} {{ alumni_form.company_name }}
@@ -196,9 +184,7 @@
                 <div class="form-group">
                     {{ field.label_tag }}
                     {% for radio in field %}
-                        {% if not radio.choice_label == "--------" %}
-                            <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
-                        {% endif %}
+                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                     {% endfor %}
                 </div>
             {% endfor %}
