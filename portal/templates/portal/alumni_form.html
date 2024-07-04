@@ -1,0 +1,210 @@
+<!-- portal/templates/portal/alumni_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Form</title>
+    <style>
+        .tab { display: none; }
+        .tab.active { display: block; }
+        .error { color: red; }
+        .hidden { display: none; }
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-weight: bold; margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+        .form-radio { margin-right: 1rem; }
+        button { padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #007BFF; color: white; cursor: pointer; }
+        button[disabled] { background-color: #ccc; cursor: not-allowed; }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab(0);
+            setupEventListeners();
+        });
+
+        function showTab(tabIndex) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach((tab, index) => {
+                tab.classList.toggle('active', index === tabIndex);
+            });
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('input[name="educational_qualification"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const otherField = document.getElementById('other-qualification-field');
+                    if (this.value === 'O') {
+                        otherField.classList.remove('hidden');
+                    } else {
+                        otherField.classList.add('hidden');
+                    }
+                });
+            });
+
+            document.querySelectorAll('input[name="course_of_study"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    filterYearOfStudyOptions(this.value);
+                });
+            });
+        }
+
+        function filterYearOfStudyOptions(course) {
+            const ugOptions = document.querySelectorAll('#id_ug_year_of_study option');
+            const pgOptions = document.querySelectorAll('#id_pg_year_of_study option');
+
+            ugOptions.forEach(option => {
+                option.style.display = course === 'UG' ? 'block' : 'none';
+            });
+
+            pgOptions.forEach(option => {
+                option.style.display = course.startsWith('PG') ? 'block' : 'none';
+            });
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Form submitted successfully!');
+                    form.reset();
+                    showTab(0);
+                } else {
+                    displayErrors(data.errors);
+                }
+            });
+        }
+
+        function displayErrors(errors) {
+            const errorFields = Object.keys(errors);
+            errorFields.forEach(field => {
+                const errorMessages = errors[field].join(', ');
+                const errorElement = document.querySelector(`[name="${field}"]`).closest('.form-group');
+                if (errorElement) {
+                    let errorDisplay = errorElement.querySelector('.error');
+                    if (!errorDisplay) {
+                        errorDisplay = document.createElement('span');
+                        errorDisplay.classList.add('error');
+                        errorElement.appendChild(errorDisplay);
+                    }
+                    errorDisplay.textContent = errorMessages;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <form id="alumni-form" method="post" enctype="multipart/form-data" action="{% url 'alumni_form' %}" onsubmit="submitForm(event)">
+        {% csrf_token %}
+        <div class="tab active" id="personal-education">
+            <h2>Personal & Education</h2>
+            <div class="form-group">
+                {{ alumni_form.email.label_tag }} {{ alumni_form.email }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.name.label_tag }} {{ alumni_form.name }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.gender.label_tag }}
+                {% for radio in alumni_form.gender %}
+                    <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.date_of_birth.label_tag }} {{ alumni_form.date_of_birth }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.contact_number.label_tag }} {{ alumni_form.contact_number }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.present_address.label_tag }} {{ alumni_form.present_address }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.permanent_address.label_tag }} {{ alumni_form.permanent_address }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.educational_qualification.label_tag }}
+                {% for radio in alumni_form.educational_qualification %}
+                    {% if not radio.choice_label == "--------" %}
+                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="form-group hidden" id="other-qualification-field">
+                {{ alumni_form.educational_qualification_other.label_tag }} {{ alumni_form.educational_qualification_other }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.course_of_study.label_tag }}
+                {% for radio in alumni_form.course_of_study %}
+                    {% if not radio.choice_label == "--------" %}
+                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.ug_year_of_study.label_tag }} {{ alumni_form.ug_year_of_study }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.pg_year_of_study.label_tag }} {{ alumni_form.pg_year_of_study }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.photo.label_tag }} {{ alumni_form.photo }}
+            </div>
+            <button type="button" onclick="showTab(1)">Next</button>
+        </div>
+        <div class="tab" id="employment-higher-education">
+            <h2>Employment & Higher Education</h2>
+            <div class="form-group">
+                {{ alumni_form.employment_status.label_tag }}
+                {% for radio in alumni_form.employment_status %}
+                    {% if not radio.choice_label == "--------" %}
+                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.company_name.label_tag }} {{ alumni_form.company_name }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.current_designation.label_tag }} {{ alumni_form.current_designation }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.company_location.label_tag }} {{ alumni_form.company_location }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.company_address.label_tag }} {{ alumni_form.company_address }}
+            </div>
+            <div class="form-group">
+                {{ alumni_form.higher_study_details.label_tag }} {{ alumni_form.higher_study_details }}
+            </div>
+            <button type="button" onclick="showTab(0)">Previous</button>
+            <button type="button" onclick="showTab(2)">Next</button>
+        </div>
+        <div class="tab" id="questionnaire">
+            <h2>Questionnaire</h2>
+            {% for field in questionnaire_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {% for radio in field %}
+                        {% if not radio.choice_label == "--------" %}
+                            <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button type="button" onclick="showTab(1)">Previous</button>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</body>
+</html>
