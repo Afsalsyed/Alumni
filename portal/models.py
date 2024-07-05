@@ -68,8 +68,8 @@ class Alumni(models.Model):
 
 class Questionnaire(models.Model):
     Q_CHOICES= [
-        ('True', 'Yes'),
-        ('False', 'No'),
+        (True, 'Yes'),
+        (False, 'No'),
         
     ]
 

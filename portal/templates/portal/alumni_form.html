@@ -65,10 +65,24 @@
             event.preventDefault();
             const form = event.target;
             const formData = new FormData(form);
+            const data = {};
+            
+            formData.forEach((value, key) => {
+                // Convert boolean fields to proper boolean values
+                if (value === 'True') {
+                    data[key] = true;
+                } else if (value === 'False') {
+                    data[key] = false;
+                } else {
+                    data[key] = value;
+                }
+            });
+    
             fetch(form.action, {
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(data),
                 headers: {
+                    'Content-Type': 'application/json',
                     'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                 }
             })
@@ -87,14 +101,14 @@
         function displayErrors(errors) {
             const errorFields = Object.keys(errors);
             errorFields.forEach(field => {
-                const errorMessages = errors[field].join(', ');
-                const errorElement = document.querySelector(`[name="${field}"]`).closest('.form-group');
+                const errorMessages = Array.isArray(errors[field]) ? errors[field].join(', ') : errors[field];
+                const errorElement = document.querySelector(`[name="${field}"]`);
                 if (errorElement) {
-                    let errorDisplay = errorElement.querySelector('.error');
+                    let errorDisplay = errorElement.closest('.form-group').querySelector('.error');
                     if (!errorDisplay) {
                         errorDisplay = document.createElement('span');
                         errorDisplay.classList.add('error');
-                        errorElement.appendChild(errorDisplay);
+                        errorElement.closest('.form-group').appendChild(errorDisplay);
                     }
                     errorDisplay.textContent = errorMessages;
                 }
@@ -108,8 +122,10 @@
         <div class="tab active" id="personal-education">
             <h2>Personal & Education</h2>
             <div class="form-group">
-                {{ alumni_form.email.label_tag }} {{ alumni_form.email }}
+                {{ alumni-form.email.label_tag }}
+                {{ alumni_form.email }}
             </div>
+            
             <div class="form-group">
                 {{ alumni_form.name.label_tag }} {{ alumni_form.name }}
             </div>
