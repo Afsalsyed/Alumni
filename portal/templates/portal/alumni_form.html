@@ -150,13 +150,14 @@
             <div class="form-group">
                 {{ alumni_form.pg_year_of_study.label_tag }} {{ alumni_form.pg_year_of_study }}
             </div>
-            <button type="button" onclick="showTab(1)">Next</button>
-        </div>
-        <div class="tab" id="photo-employment">
-            <h2>Photo & Employment</h2>
             <div class="form-group">
                 {{ alumni_form.photo.label_tag }} {{ alumni_form.photo }}
             </div>
+            <button type="button" onclick="showTab(1)">Next</button>
+        </div>
+        <div class="tab" id="photo-employment">
+            <h2>Employment</h2>
+            
             <div class="form-group">
                 {{ alumni_form.employment_status.label_tag }} {{ alumni_form.employment_status }}
             </div>
@@ -184,7 +185,7 @@
                 <div class="form-group">
                     {{ field.label_tag }}
                     {% for radio in field %}
-                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
+                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label> 
                     {% endfor %}
                 </div>
             {% endfor %}
