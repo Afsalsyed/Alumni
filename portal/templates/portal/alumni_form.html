@@ -98,52 +98,91 @@
             <div class="form-group">
                 {{ alumni_form.email.label_tag }}
                 {{ alumni_form.email}}
+                {% if alumni_form.email.errors %}
+                    <div class="error">{{ alumni_form.email.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.name.label_tag }} {{ alumni_form.name }}
+                {% if alumni_form.name.errors %}
+                    <div class="error">{{ alumni_form.name.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.gender.label_tag }}
                 {% for radio in alumni_form.gender %}
                     <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                 {% endfor %}
+                {% if alumni_form.gender.errors %}
+                    <div class="error">{{ alumni_form.gender.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.date_of_birth.label_tag }} {{ alumni_form.date_of_birth }}
+                {% if alumni_form.date_of_birth.errors %}
+                    <div class="error">{{ alumni_form.date_of_birth.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.contact_number.label_tag }} {{ alumni_form.contact_number }}
+                {% if alumni_form.contact_number.errors %}
+                    <div class="error">{{ alumni_form.contact_number.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.present_address.label_tag }} {{ alumni_form.present_address }}
+                {% if alumni_form.present_address.errors %}
+                    <div class="error">{{ alumni_form.present_address.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.permanent_address.label_tag }} {{ alumni_form.permanent_address }}
+                {% if alumni_form.permanent_address.errors %}
+                    <div class="error">{{ alumni_form.permanent_address.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.educational_qualification.label_tag }}
                 {% for radio in alumni_form.educational_qualification %}
                     <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                 {% endfor %}
+                {% if alumni_form.educational_qualification.errors %}
+                    <div class="error">{{ alumni_form.educational_qualification.errors }}</div>
+                {% endif %}
             </div>
             <div id="other_qualification_field" style="display: none;">
                 <label for="id_other_qualification">Other Qualification:</label>
                 <input type="text" name="other_qualification" id="id_other_qualification">
+                {% if alumni_form.other_qualification.errors %}
+                    <div class="error">{{ alumni_form.other_qualification.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.course_of_study.label_tag }}
                 {% for radio in alumni_form.course_of_study %}
                     <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                 {% endfor %}
+                {% if alumni_form.course_of_study.errors %}
+                    <div class="error">{{ alumni_form.course_of_study.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.ug_year_of_study.label_tag }} {{ alumni_form.ug_year_of_study }}
+                {% if alumni_form.ug_year_of_study.errors %}
+                    <div class="error">{{ alumni_form.ug_year_of_study.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.pg_year_of_study.label_tag }} {{ alumni_form.pg_year_of_study }}
+                {% if alumni_form.pg_year_of_study.errors %}
+                    <div class="error">{{ alumni_form.pg_year_of_study.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.photo.label_tag }} {{ alumni_form.photo }}
+                {% if alumni_form.photo.errors %}
+                    <div class="error">{{ alumni_form.photo.errors }}</div>
+                {% endif %}
             </div>
             <button type="button" onclick="showTab(1)">Next</button>
         </div>
@@ -154,21 +193,39 @@
                 {% for radio in alumni_form.employment_status %}
                     <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                 {% endfor %}
+                {% if alumni_form.employment_status.errors %}
+                    <div class="error">{{ alumni_form.employment_status.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.company_name.label_tag }} {{ alumni_form.company_name }}
+                {% if alumni_form.company_name.errors %}
+                    <div class="error">{{ alumni_form.company_name.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.current_designation.label_tag }} {{ alumni_form.current_designation }}
+                {% if alumni_form.current_designation.errors %}
+                    <div class="error">{{ alumni_form.current_designation.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.company_location.label_tag }} {{ alumni_form.company_location }}
+                {% if alumni_form.company_location.errors %}
+                    <div class="error">{{ alumni_form.company_location.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.company_address.label_tag }} {{ alumni_form.company_address }}
+                {% if alumni_form.company_address.errors %}
+                    <div class="error">{{ alumni_form.company_address.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ alumni_form.higher_study_details.label_tag }} {{ alumni_form.higher_study_details }}
+                {% if alumni_form.higher_study_details.errors %}
+                    <div class="error">{{ alumni_form.higher_study_details.errors }}</div>
+                {% endif %}
             </div>
             <button type="button" onclick="showTab(0)">Previous</button>
             <button type="button" onclick="showTab(2)">Next</button>
@@ -181,6 +238,9 @@
                     {% for radio in field %}
                         <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                     {% endfor %}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
                 </div>
             {% endfor %}
             <button type="button" onclick="showTab(1)">Previous</button>
