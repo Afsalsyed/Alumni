@@ -13,6 +13,9 @@
         .form-radio { margin-right: 1rem; }
         button { padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #007BFF; color: white; cursor: pointer; }
         button[disabled] { background-color: #ccc; cursor: not-allowed; }
+        .message { padding: 0.5rem; margin-bottom: 1rem; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error-message { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
     <script>
         function checkQualification() {
@@ -85,6 +88,13 @@
         {% csrf_token %}
         <div class="tab active" id="personal-education">
             <h2>Personal & Education</h2>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div class="form-group">
                 {{ alumni_form.email.label_tag }}
                 {{ alumni_form.email}}
