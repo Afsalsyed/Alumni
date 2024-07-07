@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alumni Form</title>
     <style>
         .tab { display: none; }
@@ -17,36 +15,35 @@
         button[disabled] { background-color: #ccc; cursor: not-allowed; }
     </style>
     <script>
+        function checkQualification() {
+            var qualification = document.querySelector('input[name="educational_qualification"]:checked').value;
+            var otherField = document.getElementById('other_qualification_field');
+            if (qualification === 'O') {
+                otherField.style.display = 'block';
+            } else {
+                otherField.style.display = 'none';
+                otherField.querySelector('input').value = '';  // Clear the value if hidden
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             showTab(0);
-            setupEventListeners();
+            var radios = document.querySelectorAll('input[name="educational_qualification"]');
+            radios.forEach(function(radio) {
+                radio.addEventListener('change', checkQualification);
+            });
+            checkQualification();  // Initial check
+            document.querySelectorAll('input[name="course_of_study"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    filterYearOfStudyOptions(this.value);
+                });
+            });
         });
 
         function showTab(tabIndex) {
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach((tab, index) => {
                 tab.classList.toggle('active', index === tabIndex);
-            })
-        }
-
-        
-
-        function setupEventListeners() {
-            document.querySelectorAll('input[name="educational_qualification"]').forEach(input => {
-                input.addEventListener('change', function() {
-                    const otherField = document.getElementById('id_educational_qualification_other');
-                    if (this.value === 'O') {
-                        otherField.style.display = 'block';
-                    } else {
-                        otherField.style.display = 'none';
-                    }
-                });
-            });
-
-            document.querySelectorAll('input[name="course_of_study"]').forEach(input => {
-                input.addEventListener('change', function() {
-                    filterYearOfStudyOptions(this.value);
-                });
             });
         }
 
@@ -78,11 +75,13 @@
                     errorDisplay.textContent = errorMessages;
                 }
             });
-        } 
+        }
+
     </script>
 </head>
 <body>
-    <form id="alumni-form" method="post" enctype="multipart/form-data">
+    <h2>Alumni Form</h2>
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="tab active" id="personal-education">
             <h2>Personal & Education</h2>
@@ -90,7 +89,6 @@
                 {{ alumni_form.email.label_tag }}
                 {{ alumni_form.email}}
             </div>
-            
             <div class="form-group">
                 {{ alumni_form.name.label_tag }} {{ alumni_form.name }}
             </div>
@@ -117,7 +115,10 @@
                 {% for radio in alumni_form.educational_qualification %}
                     <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                 {% endfor %}
-                {{ alumni_form.educational_qualification_other }}
+            </div>
+            <div id="other_qualification_field" style="display: none;">
+                <label for="id_other_qualification">Other Qualification:</label>
+                <input type="text" name="other_qualification" id="id_other_qualification">
             </div>
             <div class="form-group">
                 {{ alumni_form.course_of_study.label_tag }}
@@ -135,13 +136,14 @@
                 {{ alumni_form.photo.label_tag }} {{ alumni_form.photo }}
             </div>
             <button type="button" onclick="showTab(1)">Next</button>
-
         </div>
         <div class="tab" id="employment">
             <h2>Employment</h2>
-            
             <div class="form-group">
-                {{ alumni_form.employment_status.label_tag }} {{ alumni_form.employment_status }}
+                {{ alumni_form.employment_status.label_tag }}
+                {% for radio in alumni_form.employment_status %}
+                    <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
+                {% endfor %}
             </div>
             <div class="form-group">
                 {{ alumni_form.company_name.label_tag }} {{ alumni_form.company_name }}
@@ -167,7 +169,7 @@
                 <div class="form-group">
                     {{ field.label_tag }}
                     {% for radio in field %}
-                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label> 
+                        <label class="form-radio">{{ radio.tag }} {{ radio.choice_label }}</label>
                     {% endfor %}
                 </div>
             {% endfor %}

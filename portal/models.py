@@ -1,7 +1,7 @@
-from django.db import models # type: ignore
+# alumni/models.py
+from django.db import models
 
-
-class YearOfStudy(models.Model):
+class Year(models.Model):
     DEGREE_CHOICES=[
         ('UG', 'Undergraduate'),
         ('PG', 'Postgraduate'),
@@ -14,7 +14,6 @@ class YearOfStudy(models.Model):
     def __str__(self):
         return f"{self.degree} - {self.start_year} - {self.end_year}  "
 
-
 class Alumni(models.Model):
     GENDER_CHOICES = [
         ('M', 'Male'),
@@ -26,12 +25,11 @@ class Alumni(models.Model):
         ('B.Pharm', 'B.Pharm'),
         ('M.Pharm', 'M.Pharm'),
         ('PhD', 'PhD'),
-        ('O', 'Others')
+        ('O', 'Other')
     ]
 
-
     COURSE_OF_STUDY_CHOICES = [
-        ('UG', 'Undergraduate'),
+        ('UG', 'UG'),
         ('PG-Pharmaceutics)', 'PG (M.Pharm - Pharmaceutics)'),
         ('PG-Pharmacology)', 'PG (M.Pharm - Pharmacology)')
     ]
@@ -40,30 +38,30 @@ class Alumni(models.Model):
         ('Emp', 'Employee'),
         ('Entrepreneur', 'Entrepreneur'),
         ('Unemp', 'Unemployed'),
-        ('Homemaker', 'Home maker / House wife')
+        ('Home maker', 'Home maker / House wife')
     ]
 
- 
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="M")
     date_of_birth = models.DateField()
     contact_number = models.CharField(max_length=10, unique=True)
     present_address = models.TextField()
     permanent_address = models.TextField()
-    educational_qualification = models.CharField(max_length=10, choices=EDUCATIONAL_QUALIFICATION_CHOICES)
-    course_of_study = models.CharField(max_length=20, choices=COURSE_OF_STUDY_CHOICES)
-    ug_year_of_study = models.ForeignKey(YearOfStudy, related_name='ug_year', on_delete=models.CASCADE, null=True, blank=True)
-    pg_year_of_study = models.ForeignKey(YearOfStudy, related_name='pg_year', on_delete=models.CASCADE, null=True, blank=True)
+    educational_qualification = models.CharField(max_length=10, choices=EDUCATIONAL_QUALIFICATION_CHOICES, default="B.Pharm")
+    other_qualification = models.CharField(max_length=255, null=True, blank=True)
+    course_of_study = models.CharField(max_length=20, choices=COURSE_OF_STUDY_CHOICES, default="UG")
+    ug_year_of_study = models.ForeignKey(Year, related_name='ug_year', on_delete=models.CASCADE, null=True, blank=True)
+    pg_year_of_study = models.ForeignKey(Year, related_name='pg_year', on_delete=models.CASCADE, null=True, blank=True)
     photo = models.ImageField(upload_to='profile/')
-    employment_status = models.CharField(max_length=12, choices=EMPLOYMENT_STATUS_CHOICES, null=True, blank=True)
+    employment_status = models.CharField(max_length=12, choices=EMPLOYMENT_STATUS_CHOICES, default="Emp")
     company_name = models.CharField(max_length=255, null=True, blank=True)
     current_designation = models.CharField(max_length=255, null=True, blank=True)
     company_location = models.CharField(max_length=255, null=True, blank=True)
     company_address = models.TextField(null=True, blank=True)
     higher_study_details = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):  
+    
+    def __str__(self):
         return self.name
 
 class Questionnaire(models.Model):
@@ -86,5 +84,3 @@ class Questionnaire(models.Model):
 
     def __str__(self):
         return self.alumni.name
-
-
