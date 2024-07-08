@@ -25,7 +25,7 @@
                 otherField.style.display = 'block';
             } else {
                 otherField.style.display = 'none';
-                otherField.querySelector('input').value = '';  // Clear the value if hidden
+                otherField.querySelector('input').value = '';
             }
         }
 
@@ -35,7 +35,7 @@
             radios.forEach(function(radio) {
                 radio.addEventListener('change', checkQualification);
             });
-            checkQualification();  // Initial check
+            checkQualification();
             document.querySelectorAll('input[name="course_of_study"]').forEach(input => {
                 input.addEventListener('change', function() {
                     filterYearOfStudyOptions(this.value);
@@ -58,7 +58,7 @@
             const ugOptions = document.querySelectorAll('#id_ug_year_of_study option');
             const pgOptions = document.querySelectorAll('#id_pg_year_of_study option');
         
-            // Hide all options initially
+            
             ugOptions.forEach(option => {
                 option.style.display = 'block';
             });
@@ -67,12 +67,6 @@
                 option.style.display = 'none';
             });
         
-            // Show options based on the course of study
-            /*if (course === 'UG') {
-                ugOptions.forEach(option => {
-                    option.style.display = 'block';
-                });
-            } else */
             if (course.startsWith('PG')) {
                 pgOptions.forEach(option => {
                     option.style.display = 'block';

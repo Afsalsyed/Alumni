@@ -15,13 +15,21 @@ class AlumniForm(forms.ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super(AlumniForm, self).__init__(*args, **kwargs)
-        # self.fields['gender'].initial = 'M'
-        # self.fields['educational_qualification'].initial = 'B.Pharm'
-        #self.fields['employment_status'].initial = 'Emp'
         self.fields['ug_year_of_study'].queryset = Year.objects.filter(degree='UG')
         self.fields['pg_year_of_study'].queryset = Year.objects.filter(degree__startswith='PG')
         self.fields['other_qualification'].widget.attrs.update({'id': 'id_other_qualification'})
         self.fields['other_qualification'].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Validate educational qualification and other qualification
+        educational_qualification = cleaned_data.get('educational_qualification')
+        other_qualification = cleaned_data.get('other_qualification')
+        if educational_qualification == 'O' and not other_qualification:
+            self.add_error('other_qualification', "This field is required.")
+        
+        return cleaned_data
 
 class QuestionnaireForm(forms.ModelForm):
     class Meta:
@@ -35,3 +43,8 @@ class QuestionnaireForm(forms.ModelForm):
             field: forms.RadioSelect()
             for field in fields
         }
+
+    def __init__(self, *args, **kwargs):
+        super(QuestionnaireForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.initial = None 
