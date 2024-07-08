@@ -1,6 +1,5 @@
-# alumni/admin.py
 from django.contrib import admin
-from .models import Alumni, Questionnaire
+from .models import Alumni, Questionnaire, Year
 
 class AlumniAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -23,7 +22,7 @@ class AlumniAdmin(admin.ModelAdmin):
 
     list_display = (
         'name', 'email', 'gender', 'date_of_birth', 'contact_number', 
-        'present_address', 'permanent_address', 'educational_qualification', 
+        'present_address', 'permanent_address', 'educational_qualification', 'other_qualification',
         'course_of_study', 'ug_year_of_study', 'pg_year_of_study', 'photo', 
         'employment_status', 'company_name', 'current_designation', 
         'company_location', 'company_address', 'higher_study_details'
@@ -50,5 +49,11 @@ class QuestionnaireAdmin(admin.ModelAdmin):
     search_fields = ('alumni__name', 'alumni__email')
     list_filter = ('alumni_meet', 'guest_college_event', 'resource_person')
 
+class YearAdmin(admin.ModelAdmin):
+    list_display = ('degree', 'start_year', 'end_year')
+    search_fields = ('degree', 'start_year', 'end_year')
+    list_filter = ('degree',)
+
 admin.site.register(Alumni, AlumniAdmin)
 admin.site.register(Questionnaire, QuestionnaireAdmin)
+admin.site.register(Year, YearAdmin)

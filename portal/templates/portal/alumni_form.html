@@ -41,6 +41,10 @@
                     filterYearOfStudyOptions(this.value);
                 });
             });
+            const selectedCourse = document.querySelector('input[name="course_of_study"]:checked');
+            if (selectedCourse) {
+                filterYearOfStudyOptions(selectedCourse.value);
+            }
         });
 
         function showTab(tabIndex) {
@@ -53,15 +57,29 @@
         function filterYearOfStudyOptions(course) {
             const ugOptions = document.querySelectorAll('#id_ug_year_of_study option');
             const pgOptions = document.querySelectorAll('#id_pg_year_of_study option');
-
+        
+            // Hide all options initially
             ugOptions.forEach(option => {
-                option.style.display = course === 'UG' ? 'block' : 'none';
+                option.style.display = 'block';
             });
-
+        
             pgOptions.forEach(option => {
-                option.style.display = course.startsWith('PG') ? 'block' : 'none';
+                option.style.display = 'none';
             });
+        
+            // Show options based on the course of study
+            /*if (course === 'UG') {
+                ugOptions.forEach(option => {
+                    option.style.display = 'block';
+                });
+            } else */
+            if (course.startsWith('PG')) {
+                pgOptions.forEach(option => {
+                    option.style.display = 'block';
+                });
+            }
         }
+        
 
         function displayErrors(errors) {
             const errorFields = Object.keys(errors);
