@@ -15,6 +15,10 @@ class AlumniForm(forms.ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super(AlumniForm, self).__init__(*args, **kwargs)
+        self.fields['gender'].initial = None
+        self.fields['educational_qualification'].initial = None
+        self.fields['course_of_study'].initial = None
+        self.fields['employment_status'].initial = None
         self.fields['ug_year_of_study'].queryset = Year.objects.filter(degree='UG')
         self.fields['pg_year_of_study'].queryset = Year.objects.filter(degree__startswith='PG')
         self.fields['other_qualification'].widget.attrs.update({'id': 'id_other_qualification'})
